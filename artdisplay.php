@@ -49,7 +49,7 @@
   <br><br>
  </tr>
  <?php
-$conn = mysqli_connect("localhost", "root", "", "art_gallery");
+$conn = mysqli_connect("localhost", "root", "amna12345", "art_gallery");
 
   if ($conn->connect_error) {
    die("Connection failed: " . $conn->connect_error);

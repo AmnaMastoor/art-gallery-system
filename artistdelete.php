@@ -73,38 +73,68 @@ div{
  <?php
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "amna12345";
 $dbname = "art_gallery";
-
 
 $con = new mysqli($servername, $username, $password, $dbname);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-    $a=$_POST['artistid'];
-
-    if($a!="")
-        {
-            $sql1 = "SELECT * from Artist where artistid='$a'";
-            $result = mysqli_query($con,$sql1);
-
-            if(mysqli_num_rows($result)>0)
-            {
-            $sql3="DELETE from Artist where artistid='$a'"; 
-            mysqli_query($con,$sql3);
-            echo "<b>Record with artisid = $a is deleted successfully.<b>";
-            }
-           else
-        {
-            echo "<b>!!!Error in Deleting Record!!!<br> Record '$a' was not found in database.<b>" ;
-        }
-        }
-        else
-        {
-                echo "<b>Artist ID Field is Empty</b>";
-            }
-$con->close();
+if ($con->connect_error) {
+    die("<b>Connection failed: " . $con->connect_error . "</b>");
 }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $a = trim($_POST['artistid']);
+
+    if ($a != "") {
+        // Check if artist exists
+        $sql1 = $con->prepare("SELECT * FROM Artist WHERE artistid = ?");
+        $sql1->bind_param("s", $a);
+        $sql1->execute();
+        $result = $sql1->get_result();
+
+        if ($result->num_rows > 0) {
+            // 1. Delete orders linked to artworks of this artist
+            $sqlDeleteOrders = $con->prepare(
+                "DELETE o FROM orders o 
+                 JOIN artwork aw ON o.artid = aw.artid 
+                 WHERE aw.artistid = ?"
+            );
+            $sqlDeleteOrders->bind_param("s", $a);
+            $sqlDeleteOrders->execute();
+
+            // 2. Delete artworks linked to the artist
+            $sqlDeleteArtworks = $con->prepare("DELETE FROM artwork WHERE artistid = ?");
+            $sqlDeleteArtworks->bind_param("s", $a);
+            $sqlDeleteArtworks->execute();
+
+            // 3. Delete preferences linked to the artist
+            $sqlDeletePreferences = $con->prepare("DELETE FROM preferences WHERE artistid = ?");
+            $sqlDeletePreferences->bind_param("s", $a);
+            $sqlDeletePreferences->execute();
+
+            // 4. Delete the artist
+            $sqlDeleteArtist = $con->prepare("DELETE FROM Artist WHERE artistid = ?");
+            $sqlDeleteArtist->bind_param("s", $a);
+            if ($sqlDeleteArtist->execute()) {
+                echo "<b>All orders, artworks, and preferences linked to artistid '$a' were deleted.<br>";
+                echo "Artist record with artistid = '$a' deleted successfully.</b>";
+            } else {
+                echo "<b>Error deleting artist record: " . $con->error . "</b>";
+            }
+
+            $sqlDeleteOrders->close();
+            $sqlDeleteArtworks->close();
+            $sqlDeletePreferences->close();
+            $sqlDeleteArtist->close();
+        } else {
+            echo "<b>!!! Error in Deleting Record !!!<br>Record '$a' was not found in database.</b>";
+        }
+    } else {
+        echo "<b>Artist ID field is empty.</b>";
+    }
+    $sql1->close();
+    $con->close();
+}
+
 ?>
 </body>
 </html>

@@ -1,152 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>
-        Insertion in Artist
-    </title>
-</head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-h1{
-    border: 10px solid grey;
-    border-radius: 28px;
-    padding: 19px;
-}
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: white;
-}
+    <title>Insert Artist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
 
-.container {
-    padding: 19px;
-    background-color: snow;
-}
+        h1 {
+            text-align: center;
+            color: #3366cc;
+            margin-bottom: 30px;
+        }
 
-input[type=text], input[type=text]
- {
-    width: 50%;
-    padding: 19px;
-    margin: 5px 0 32px 0;
-    display: inline-block;
-    border-radius: 8px;
-    border: 2px solid grey;
-    background: #f1f1f0;
-    font-weight: bold;
-    font-size: 19px;
-}
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
 
-input[type=text]:focus, input[type=text]:focus {
-    background-color: #ffffff;
-    outline: none;
-}
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1.5px solid grey;
+            font-size: 16px;
+            background: #f9f9f9;
+        }
 
-hr {
-    border: 1.5px solid #f1f1f1;
-    margin-bottom: 35px;
-}
-.registerbtn{
-    background-color: forestgreen;
-    color: white;
-    padding: 16px 10px;
-    margin: 8px 20px 20px 50px;
-    border-radius: 24px;
-    cursor: pointer;
-    width: 15%;
-    opacity: 0.7;
-    align-content: center;
-    font-family: "verdana";
-    font-weight: bold;
-    -webkit-box-shadow: 0px 6px 0px green;
-    -moz-box-shadow: 0px 6px 0px green;
-    box-shadow: 0px 6px 0px green;
-    -webkit-transition: all .1s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
-    -webkit-transform: translate(0, 5px) rotateX(25deg);
-    -moz-transform: translate(0, 4px);
-    transform: translate(0, 4px)
-    }
-.registerbtn:hover 
-{
-    opacity: 1;
-    background-color:forestgreen;
-}
+        .btn-group {
+            text-align: center;
+            margin-top: 30px;
+        }
 
-.registerbtn1{
-    background-color: red;
-    color: white;
-    padding: 16px 10px;
-    margin: 8px 20px 20px 50px;
-    border-radius: 24px;
-    cursor: pointer;
-    width: 15%;
-    opacity: 0.7;
-    align-content: center;
-    font-family: "verdana";
-    font-weight: bold;
-    -webkit-box-shadow: 0px 6px 0px darkred;
-    -moz-box-shadow: 0px 6px 0px darkred;
-    box-shadow: 0px 6px 0px darkred;
-    -webkit-transition: all .1s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
-    -webkit-transform: translate(0, 5px) rotateX(25deg);
-    -moz-transform: translate(0, 4px);
-    transform: translate(0, 4px)
-    }
-.registerbtn1:hover 
-{
-    opacity: 1;
-    background-color:red;
-}
+        .registerbtn, .registerbtn1 {
+            background-color: forestgreen;
+            color: white;
+            padding: 12px 24px;
+            margin: 8px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 40%;
+            font-size: 16px;
+            box-shadow: 0 4px #2e8b57;
+            transition: all 0.2s ease;
+        }
 
-label{
-    font-weight: bold;
-    font-size: 20px;
-    font-family: 'verdana';
-}
-</style>
+        .registerbtn1 {
+            background-color: crimson;
+            box-shadow: 0 4px #a30000;
+        }
+
+        .registerbtn:hover,
+        .registerbtn1:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
 
-<form ACTION="artistinsert.php"METHOD="POST">
-  <div class="container">
-    <center><h1 style="color:#3366cc" size="30";><font style="border: 10px solid grey; padding: 19px;">FILL THE FORM WITH PROPER DETAILS</font></h1></center>
-    <hr>
-    <center>
-    <label for="artistid"><b>Artist ID</b></label><br>
-    <input type="text" placeholder="Enter Artist ID" name="artistid" required><br>
-   
-    <label for="fname1"><b>Artist's First Name</b></label><br>
-    <input type="text" placeholder="Enter First Name(characters only)" name="fname1" required><br>
-    
-    <label for="lname1"><b>Artist's Last Name</b></label><br>
-    <input type="text" placeholder="Enter Last Name(characters only)" name="lname1" required><br>
-    
-    <label for="birthplace"><b>Birthplace of Artist</b></label><br>
-    <input type="text" placeholder="Enter Birthplace(characters only)" name="birthplace" required><br>
+<form action="artistinsert.php" method="POST">
+    <div class="container">
+        <h1>Insert Artist Details</h1>
 
-    <label for="style"><b>Style of Art</b></label><br>
-    <input type="text" placeholder="Enter Style Name(characters only)" name="style" required><br>
-    
-    <label for="custid"><b>Customer ID</b></label><br>
-    <input type="text" placeholder="Enter Customer ID" name="custid" required><br>
-    
-    <label for="E_ID"><b>Exhibition ID</b></label><br>
-    <input type="text" placeholder="Enter Exhibition ID" name="E_ID" required><br>
-    
-    <label for="G_ID"><b>Gallery ID</b></label><br>
-    <input type="text" placeholder="Enter Gallery ID" name="G_ID" required><br>
-    <hr>
+        <label for="artistid">Artist ID</label>
+        <input type="text" name="artistid" placeholder="e.g. A101" required>
 
-    <button type="submit" class="registerbtn">SUBMIT</button>
-    <button type="reset" class="registerbtn1">RESET</button>
-    </center>
-  </div>
+        <label for="fname">First Name</label>
+        <input type="text" name="fname" placeholder="First Name" required>
+
+        <label for="lname">Last Name</label>
+        <input type="text" name="lname" placeholder="Last Name" required>
+
+        <label for="birthplace">Birthplace</label>
+        <input type="text" name="birthplace" placeholder="e.g. Lahore" required>
+
+        <label for="style_id">Art Style ID</label>
+        <input type="number" name="style_id" placeholder="Enter Style ID (numeric)" required>
+
+        <div class="btn-group">
+            <button type="submit" class="registerbtn">Submit</button>
+            <button type="reset" class="registerbtn1">Reset</button>
+        </div>
+    </div>
 </form>
 
 </body>

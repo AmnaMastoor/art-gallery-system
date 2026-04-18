@@ -1,145 +1,349 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>
-		ART GALLERY DATABASE
-	</title>
+    <meta charset="UTF-8" />
+    <title>Art Gallery Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Aclonica&family=Raleway:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        /* Reset and basics */
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Raleway', sans-serif;
+            color: #f0f0f0;
+            background: url("./Images/Main-background.jpg") no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+
+        /* Dark overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(20, 20, 20, 0.6);
+            z-index: 0;
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+            text-align: center;
+        }
+
+        h2 {
+            font-family: 'Aclonica', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            color: #e0e7ff;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+        }
+
+        .tagline {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ff6f91;
+            margin-bottom: 50px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            gap: 10px;
+            margin-bottom: 50px;
+            padding: 0 10px;
+            flex-shrink: 1;
+            flex-grow: 1;
+            flex-basis: auto;
+        }
+
+        nav a {
+            flex: 1 1 auto;
+            min-width: 80px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #f0e9ff;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(255, 111, 145, 0.3);
+            transition: all 0.3s ease;
+            user-select: none;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 111, 145, 0.6);
+        }
+
+        nav a:hover,
+        nav a:focus {
+            background: #ff6f91;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(255, 111, 145, 0.8);
+            transform: translateY(-4px);
+            border-color: #ff3b5f;
+        }
+
+        /* Gallery section */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+            padding-bottom: 40px;
+        }
+
+        .art-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(255, 111, 145, 0.3);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            color: #fefefe;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .art-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(255, 111, 145, 0.7);
+        }
+
+        .art-image-container {
+            position: relative;
+            overflow: hidden;
+            display: block;
+        }
+
+        .art-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #ff6f91;
+            display: block;
+            transition: filter 0.3s ease;
+        }
+
+        .art-image-container:hover img,
+        .art-image-container:focus-within img {
+            filter: brightness(0.7);
+        }
+
+        .add-to-cart-btn {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6f91cc;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 111, 145, 0.7);
+            user-select: none;
+        }
+
+        .art-image-container:hover .add-to-cart-btn,
+        .art-image-container:focus-within .add-to-cart-btn {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        .art-info {
+            padding: 15px 20px;
+            text-align: left;
+        }
+
+        .art-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #ff87a1;
+        }
+
+        .art-artist {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 8px;
+            color: #f7c8d8;
+        }
+
+        .art-year {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            color: #dda0dd;
+        }
+
+        .art-description {
+            font-size: 1rem;
+            line-height: 1.3;
+            color: #e4d6eb;
+        }
+
+        /* Footer */
+        footer {
+            color: #bbb;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer a {
+            color: #ff6f91;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #ff3b5f;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 2.5rem;
+            }
+            .tagline {
+                font-size: 1.2rem;
+                margin-bottom: 30px;
+            }
+            nav a {
+                max-width: 100%;
+                padding: 15px;
+                font-size: 1.1rem;
+            }
+            .art-image {
+                height: 180px;
+            }
+        }
+         
+    </style>
 </head>
+
 <body>
-	<h1>
-		<link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Aclonica'>
-<center> 
-    <h2><font style="border: 13px groove powderblue;  border-radius: 7px; padding: 5px 24px;" color=floralwhite face="Aclonica"; > ART GALLERY MANAGEMENT SYSTEM </font></h2>
-</center>
-<style> 
-h2{
-	padding-top:  0px;
-	border-radius: 5px;
-}
+    <div class="container">
+        <h2>La Galerie Antique</h2>
+        <div class="tagline">🎨 Discover the Colors of Creativity at Our Art Gallery!</div>
 
-body{background-color: lavenderblush; 
-	background: url("./Images/Main-background.jpg") no-repeat;
-background-size:cover;
-}
-ul{
-	margin:3pc;
-	padding:0.1px;
-	list-style:none;
-}
-ul li{
-	float:left;
-	width:265px;
-	height:49px;
-	background-color:rgb(129, 7, 159);
-	opacity:.8;
-	line-height:40px;
-	text-align:center;
-	font-size:25px;
-	margin-right:7px;
-	margin-left: 5px;
-	font-family: verdana;
-	font-weight: bold;
-	font-size: 35px;
-	margin-bottom: 4px;
-}
-ul li a{
-	text-align: center;
-	color:white;
-	display:block;
-	padding-bottom: 7.5px;
-}
-ul li a:hover{
-	background-color:rgb(36, 202, 111);
-	color:black;
-    font-family:Arial, Helvetica, sans-serif;
-}
-ul li ul li{
-	display:none;
-}
-ul li:hover ul li{
-	display:block;
+        <nav>
+            <a href="gallery.html" tabindex="1">Gallery</a>
+            <a href="exhibition.html" tabindex="2">Exhibition</a>
+            <a href="artwork.html" tabindex="3">Artwork</a>
+            <a href="customer.html" tabindex="4">Customer</a>
+            <a href="artist.html" tabindex="5">Artist</a>
+            <a href="contacts.html" tabindex="6">Contacts</a>
+            <a href="dashboard.php" tabindex="7">DashBoard</a>
+            <a href="artist_profile.php" tabindex="8">Artist Profile</a>
+        </nav>
 
-}
-</style><br>
-<div class="example1">
-	<h3 style="font-family: Verdana; font-size: 35px; color:deeppink;">This is an ART GALLERY PROJECT!</h3>
-	
-</div>
-<ul style="max-width: 40px; text-decoration: none;">
-	<li><a href="gallery.html" >GALLERY</a></li>
-	<li><a href="exhibition.html">EXHIBITION</a></li>
-	<li><a href="artwork.html">ARTWORK</a></li>
-	<li><a href="customer.html">CUSTOMER</a></li>
-	<li><a href="artist.html">ARTIST</a></li>
-	<li><a href="contacts.html">CONTACTS</a></li>
-</ul>
-<br>
-</h1>	
-<style>
-.example1 {
- height: 50px;	
- overflow: hidden;
- position: relative;
-}
-.example1 h3 {
- font-size: 3em;
- color: #F7F9F9;
- position: absolute;
- width: 100%;
- height: 100%;
- margin-top: 0px;
- line-height: 50px;
- text-align: center;
- 
- -moz-transform:translateX(100%);
- -webkit-transform:translateX(100%);	
- transform:translateX(100%);
-	
- -moz-animation: example1 15s linear infinite;
- -webkit-animation: example1 15s linear infinite;
- animation: example1 11s linear infinite;
-}
+        <!-- Gallery Section -->
+        <section class="gallery" aria-label="Famous artworks">
 
-@-moz-keyframes example1 {
- 0%{ -moz-transform: translateX(100%); }
- 100% { -moz-transform: translateX(-100%); }
-}
-@-webkit-keyframes example1 {
- 0%   { -webkit-transform: translateX(100%); }
- 100% { -webkit-transform: translateX(-100%); }
-}
-@keyframes example1 {
- 0%   { 
- -moz-transform: translateX(100%); 
- -webkit-transform: translateX(100%);
- transform: translateX(100%); 		
- }
- 100% { 
- -moz-transform: translateX(100%); 
- -webkit-transform: translateX(-100%);
- transform: translateX(-100%); 
- }
-}
-</style>
+            <article class="art-card" tabindex="0">
+                <div class="art-image-container">
+                    <img src="./Images/images (2).jfif" alt="Starry Night by Vincent van Gogh" class="art-image" />
+<a href="order.php?artid=AW20" class="add-to-cart-btn" tabindex="0">Add to Cart</a>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">The Starry Night</h3>
+                    <div class="art-artist">Vincent van Gogh</div>
+                    <div class="art-year">1889</div>
+                    <p class="art-description">One of Van Gogh’s most iconic works, depicting a swirling night sky over a quiet village.</p>
+                </div>
+            </article>
 
-<style>
-* { 
-    box-sizing: border-box;
-}
+            <article class="art-card" tabindex="0">
+                <div class="art-image-container">
+                    <img src="./Images/images.jfif" alt="Mona Lisa by Leonardo da Vinci" class="art-image" />
+<a href="order.php?artid=AW12" class="add-to-cart-btn" tabindex="0">Add to Cart</a>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Mona Lisa</h3>
+                    <div class="art-artist">Leonardo da Vinci</div>
+                    <div class="art-year">1503</div>
+                    <p class="art-description">A timeless portrait known for its subject’s mysterious smile and captivating gaze.</p>
+                </div>
+            </article>
 
-.column {
-    float: left;
-    width: 33.33%;
-    padding: 1px;
-}
+            <article class="art-card" tabindex="0">
+                <div class="art-image-container">
+                    <img src="./Images/images (4).jfif" alt="David by Michelangelo" class="art-image" />
+                    <a href="order.php?artid=AW18" class="add-to-cart-btn" tabindex="0">Add to Cart</a>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">David</h3>
+                    <div class="art-artist">Michelangelo</div>
+                    <div class="art-year">1504</div>
+                    <p class="art-description">A Renaissance masterpiece of sculpture capturing the human form in perfect proportion.</p>
+                </div>
+            </article>
 
-.row::after {
-    content: "";
-    clear: both;
-    display: table;
-}
-</style>
-</head>
-<body>
+            <article class="art-card" tabindex="0">
+                <div class="art-image-container">
+                    <img src="./Images/images (1).jfif" alt="Impression, Sunrise by Claude Monet" class="art-image" />
+<a href="order.php?artid=AW14" class="add-to-cart-btn" tabindex="0">Add to Cart</a>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Impression, Sunrise</h3>
+                    <div class="art-artist">Claude Monet</div>
+                    <div class="art-year">1872</div>
+                    <p class="art-description">The painting that gave Impressionism its name, capturing the light of dawn in a harbor.</p>
+                </div>
+            </article>
+
+            <article class="art-card" tabindex="0">
+                <div class="art-image-container">
+                    <img src="./Images/images (5).jfif" alt="The Persistence of Memory by Salvador Dalí" class="art-image" />
+<a href="order.php?artid=AW15" class="add-to-cart-btn" tabindex="0">Add to Cart</a>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">The Persistence of Memory</h3>
+                    <div class="art-artist">Salvador Dalí</div>
+                    <div class="art-year">1931</div>
+                    <p class="art-description">A surreal depiction of melting clocks symbolizing the fluidity of time.</p>
+                </div>
+            </article>
+
+            <article class="art-card" tabindex="0">
+                <div class="art-image-container">
+                    <img src="./Images/images (3).jfif" alt="Girl with a Pearl Earring by Johannes Vermeer" class="art-image" />
+<a href="order.php?artid=AW16" class="add-to-cart-btn" tabindex="0">Add to Cart</a>
+                </div>
+                <div class="art-info">
+                    <h3 class="art-title">Girl with a Pearl Earring</h3>
+                    <div class="art-artist">Johannes Vermeer</div>
+                    <div class="art-year">1665</div>
+                    <p class="art-description">An enigmatic portrait showcasing delicate light and shadow, often called the 'Mona Lisa of the North.'</p>
+                </div>
+            </article>
+
+        </section>
+
+        <footer>
+            &copy; 2023 Amna Mastoor | <a href="https://www.nu.edu.pk/">National University of Modern Languages (NUML)</a> | Sir Umair Aslam | Roll No: CS-202
+        </footer>
+    </div>
 </body>
 </html>

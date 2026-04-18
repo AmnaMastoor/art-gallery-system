@@ -1,31 +1,36 @@
- <?php
-    if(isset($_POST['E_ID']) && isset($_POST['G_ID']) && isset($_POST['artid']) && isset($_POST['artistid']) && isset($_POST['title']) && isset($_POST['type_of_art']) && isset($_POST['year']) && isset($_POST['price'])):
+<?php
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Show errors
+try {
+    $conn = new mysqli('localhost', 'root', 'amna12345', 'art_gallery');
+    $conn->set_charset("utf8mb4");
 
+    // Get POST values
+    $artid = $_POST['artid'];
+    $title = $_POST['title'];
+    $year = $_POST['year'];
+    $type = $_POST['type_of_art'];
+    $price = $_POST['price'];
     $eid = $_POST['E_ID'];
     $gid = $_POST['G_ID'];
-    $artid = $_POST['artid'];
     $artistid = $_POST['artistid'];
-    $title = $_POST['title'];
-    $type_of_art = $_POST['type_of_art'];
-    $year = $_POST['year'];
-    $price = $_POST['price'];
 
-    $link = new mysqli('localhost','root','','art_gallery');
+    // Debug: Print the values
+    echo "<pre>";
+    print_r($_POST);
+    echo "✅ Reached insert block.";
 
-    if($link->connect_error)
-        die('connection error: '.$link->connect_error);
+    $stmt = $conn->prepare("INSERT INTO artwork (artid, title, year, type_of_art, price, eid, gid, artistid)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $sql3 = "INSERT INTO artwork(artid, title, type_of_art, price, eid, gid, artistid, year) VALUES('".$artid."', '".$title."', '".$type_of_art."', '".$price."', '".$eid."', '".$gid."', '".$artistid."', '".$year."')";
+    $stmt->bind_param("ssisdsss", $artid, $title, $year, $type, $price, $eid, $gid, $artistid);
+    $stmt->execute();
 
-    $result = $link->query($sql3); 
+    echo "✅ Artwork successfully added!";
 
-    if($result > 0):
-        echo 'Successfully inserted into Artwork';
-    else:
-        echo 'Unable to post';
-    endif;
+    $stmt->close();
+    $conn->close();
 
-    $link->close();
-    die();
-    endif; 
+} catch (mysqli_sql_exception $e) {
+    echo "❌ MySQL error: " . $e->getMessage();
+}
 ?>

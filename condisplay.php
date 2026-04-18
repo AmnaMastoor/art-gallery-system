@@ -52,27 +52,27 @@
   <br><br>
  </tr>
   <?php
-$con = mysqli_connect("localhost", "root", "", "art_gallery");
+$con = mysqli_connect("localhost", "root", "amna12345", "art_gallery");
 
-  if ($con->connect_error) {
-   die("Connection failed: " . $con->connect_error);
-  } 
+if ($con->connect_error) {
+    die("Connection failed: " . $con->connect_error);
+} 
 
-  $sql = "SELECT * from contacts";
-  mysqli_query($con,$sql);
-  if ($result = mysqli_query($con, $sql))
-   {
-   
-   while($row = $result->fetch_assoc())
-    {
-    echo "<tr><td>" . $row["CUSTID"]. "</td><td>". $row["PHONE"]. "<br></br></td></tr>";
+$sql = "SELECT * FROM contacts";
+
+if ($result = mysqli_query($con, $sql)) {
+    while ($row = $result->fetch_assoc()) {
+        // Convert keys to lowercase for safe access
+        $row = array_change_key_case($row, CASE_LOWER);
+        
+        echo "<tr><td>" . htmlspecialchars($row["custid"]) . "</td><td>" . htmlspecialchars($row["phone"]) . "</td></tr>";
     }
     echo "</table>";
-    }
-else 
-  { 
-    echo "0 results"; 
-  }
+} else {
+    echo "0 results";
+}
+
+
 $con->close();
 ?>
 </table>

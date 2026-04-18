@@ -57,7 +57,7 @@
   <br><br>
  </tr>
   <?php
-$con = mysqli_connect("localhost", "root", "", "art_gallery");
+$con = mysqli_connect("localhost", "root", "amna12345", "art_gallery");
 echo " <b><center>Creating Stored Procedure...</center></b>";
 
   if ($con->connect_error) {

@@ -1,127 +1,133 @@
--- phpMyAdmin SQL Dump
--- version 4.8.3
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3306
--- Generation Time: May 12, 2022 at 01:14 PM
--- Server version: 5.7.23
--- PHP Version: 5.6.38
+DROP DATABASE IF EXISTS art_gallery;
+CREATE DATABASE art_gallery CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE art_gallery;
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Table: art_style (normalized art styles)
+CREATE TABLE art_style (
+  style_id INT AUTO_INCREMENT PRIMARY KEY,
+  style_name VARCHAR(50) NOT NULL UNIQUE
+);
 
+-- Insert dummy art styles
+INSERT INTO art_style (style_name) VALUES 
+('Pop Art'), ('Fauvism'), ('Oil on Canvas'), ('Analytic Cubism'), ('Oil Painting'), ('High Renaissance');
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- Table: artist
+CREATE TABLE artist (
+  artistid VARCHAR(20) PRIMARY KEY,
+  fname VARCHAR(50) NOT NULL,
+  lname VARCHAR(50) NOT NULL,
+  birthplace VARCHAR(50),
+  style_id INT,
+  FOREIGN KEY (style_id) REFERENCES art_style(style_id)
+);
 
---
--- Database: `art_gallery`
---
+-- Insert dummy artists
+INSERT INTO artist (artistid, fname, lname, birthplace, style_id) VALUES
+('ART1', 'Georgia', 'O Keeffe', 'USA', 3), -- Oil on Canvas
+('ART2', 'Pablo', 'Picasso', 'Spain', 4),  -- Analytic Cubism
+('ART3', 'Rembrandt', 'van Rijn', 'Netherlands', 5), -- Oil Painting
+('ART4', 'Theodore', 'Chasseriau', 'France', 5),
+('ART5', 'Leonardo', 'da Vinci', 'Italy', 6), -- High Renaissance
+('ART7', 'Mind', 'Hunter', 'Kathmandu', 5);
 
+-- Table: gallery
+CREATE TABLE gallery (
+  gid VARCHAR(20) PRIMARY KEY,
+  gname VARCHAR(100) NOT NULL,
+  location VARCHAR(100)
+);
+
+-- Trigger to uppercase gallery names before insert
 DELIMITER $$
---
--- Procedures
---
-DROP PROCEDURE IF EXISTS `display`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `display` ()  SELECT Cu.custid, gid, artid, fname, lname, dob, address, Co.PHONE from CUSTOMER Cu JOIN contacts Co on Cu.custid=Co.CUSTID$$
-
-DROP PROCEDURE IF EXISTS `GetAge`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `GetAge` ()  BEGIN 
-SELECT *, year(CURRENT_DATE())-year(DOB) as age from CUSTOMER;
+CREATE TRIGGER UPPERCASE_gname BEFORE INSERT ON gallery
+FOR EACH ROW
+BEGIN
+  SET NEW.gname = UPPER(NEW.gname);
 END$$
-
 DELIMITER ;
 
--- --------------------------------------------------------
+-- Insert dummy galleries
+INSERT INTO gallery (gid, gname, location) VALUES
+('MM126', 'MY GALLERY', 'Patna'),
+('NG123', 'NATIONAL GALLERY', 'Washington'),
+('BM123', 'BRITISH MUSEUM', 'London'),
+('JG123', 'JAHANGIR GALLERY', 'Mumbai'),
+('TLM123', 'THE LOUVRE MUSEUM', 'Paris'),
+('MM123', 'METROPOLITAN MUSEUM', 'New York');
 
---
--- Table structure for table `artist`
---
+-- Table: exhibition
+CREATE TABLE exhibition (
+  eid VARCHAR(20) PRIMARY KEY,
+  gid VARCHAR(20),
+  startdate DATE,
+  enddate DATE,
+  FOREIGN KEY (gid) REFERENCES gallery(gid)
+);
 
-DROP TABLE IF EXISTS `artist`;
-CREATE TABLE IF NOT EXISTS `artist` (
-  `artistid` varchar(20) NOT NULL,
-  `gid` varchar(20) DEFAULT NULL,
-  `custid` varchar(20) DEFAULT NULL,
-  `eid` varchar(20) DEFAULT NULL,
-  `fname1` char(25) DEFAULT NULL,
-  `lname1` char(25) DEFAULT NULL,
-  `birthplace` char(25) DEFAULT NULL,
-  `style` char(25) DEFAULT NULL,
-  PRIMARY KEY (`artistid`),
-  KEY `gid` (`gid`),
-  KEY `eid` (`eid`),
-  KEY `custid` (`custid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+-- Insert dummy exhibitions
+INSERT INTO exhibition (eid, gid, startdate, enddate) VALUES
+('H123', 'BM123', '2018-12-21', '2019-01-05'),
+('I123', 'MM123', '2019-01-25', '2019-02-05'),
+('G123', 'NG123', '2018-12-01', '2018-12-15'),
+('J123', 'TLM123', '2018-12-15', '2019-01-15'),
+('K123', 'JG123', '2019-03-09', '2019-03-27');
 
---
--- Dumping data for table `artist`
---
+-- Table: artwork
+CREATE TABLE artwork (
+  artid VARCHAR(20) PRIMARY KEY,
+  title VARCHAR(100),
+  year YEAR,
+  type_of_art VARCHAR(50),
+  price DECIMAL(15, 2),
+  eid VARCHAR(20),
+  gid VARCHAR(20),
+  artistid VARCHAR(20),
+  FOREIGN KEY (eid) REFERENCES exhibition(eid),
+  FOREIGN KEY (gid) REFERENCES gallery(gid),
+  FOREIGN KEY (artistid) REFERENCES artist(artistid)
+);
 
-INSERT INTO `artist` (`artistid`, `gid`, `custid`, `eid`, `fname1`, `lname1`, `birthplace`, `style`) VALUES
-('ART1', 'MM123', 'AT2000', 'AD22', 'Georgia', 'O Keeffe', 'USA', 'Oil on Canvas'),
-('ART2', 'TLM123', 'AR1998', 'AD55', 'Pablo', 'Picasso', 'Spain', 'Analytic Cubism'),
-('ART3', 'BM123', 'AD1998', 'AD88', 'Rembrandt', 'van Rijn', 'Netherlands', 'Oil Painting'),
-('ART4', 'JG123', 'AM1994', 'AD00', 'Theodore', 'Chasseriau', 'France', 'Oil Painting'),
-('ART5', 'NG123', 'PM1996', 'AD11', 'Leonardo', 'da Vinci', 'Italy', 'High Renaissance'),
-('ART7', 'MM126', 'AR2022', 'H123', 'Mind', 'Hunter', 'Kathmandu', 'Oil Painting');
+-- Insert dummy artworks
+INSERT INTO artwork (artid, title, year, type_of_art, price, eid, gid, artistid) VALUES
+('AW12', 'Mona Lisa', 1888, 'Painting', 1000000000.00, 'G123', 'NG123', 'ART5'),
+('AW34', 'Poppies', 1873, 'Painting', 150000000.00, 'H123', 'MM123', 'ART1'),
+('AW56', 'Guernica', 1937, 'Painting', 250000000.00, 'I123', 'TLM123', 'ART2'),
+('AW78', 'The Night Watch', 1642, 'Painting', 90000000.00, 'J123', 'BM123', 'ART3'),
+('AW90', 'Two Sisters', 2010, 'Sculpture', 200000.00, 'K123', 'JG123', 'ART4'),
+('A111', 'Untitled', 2018, 'Abstract', 2000000000.00, NULL, NULL, 'ART7');
 
--- --------------------------------------------------------
+-- Table: customer
+CREATE TABLE customer (
+  custid VARCHAR(20) PRIMARY KEY,
+  fname VARCHAR(50) NOT NULL,
+  lname VARCHAR(50) NOT NULL,
+  dob DATE,
+  address VARCHAR(100),
+  gid VARCHAR(20),
+  FOREIGN KEY (gid) REFERENCES gallery(gid)
+);
 
---
--- Table structure for table `artwork`
---
+-- Insert dummy customers
+INSERT INTO customer (custid, fname, lname, dob, address, gid) VALUES
+('AT2000', 'Akshay', 'Thakur', '2000-04-16', 'New York', 'MM123'),
+('AR1998', 'Ashutosh', 'Ranjan', '1998-02-04', 'Paris', 'TLM123'),
+('AD1998', 'Ayush', 'Dhar', '1998-09-28', 'London', 'BM123'),
+('AM1994', 'Avanish', 'Mehta', '1994-10-05', 'Mumbai', 'JG123'),
+('PM1996', 'Prashant', 'Mehta', '1996-06-18', 'Washington', 'NG123'),
+('AR2022', 'Aashu', 'Demo', '2022-05-10', 'Delhi', 'MM126'),
+('AR2025', 'Aashut', 'Demo0', '2022-05-10', 'Delhi', 'MM126');
 
-DROP TABLE IF EXISTS `artwork`;
-CREATE TABLE IF NOT EXISTS `artwork` (
-  `artid` varchar(20) NOT NULL,
-  `title` varchar(20) DEFAULT NULL,
-  `year` varchar(5) DEFAULT NULL,
-  `type_of_art` varchar(20) DEFAULT NULL,
-  `price` varchar(15) DEFAULT NULL,
-  `eid` varchar(20) DEFAULT NULL,
-  `gid` varchar(20) DEFAULT NULL,
-  `artistid` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`artid`),
-  KEY `eid` (`eid`),
-  KEY `gid` (`gid`),
-  KEY `artistid` (`artistid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+-- Table: contacts (customer phone numbers)
+CREATE TABLE contacts (
+  custid VARCHAR(20),
+  phone VARCHAR(15),
+  PRIMARY KEY (custid, phone),
+  FOREIGN KEY (custid) REFERENCES customer(custid)
+);
 
---
--- Dumping data for table `artwork`
---
-
-INSERT INTO `artwork` (`artid`, `title`, `year`, `type_of_art`, `price`, `eid`, `gid`, `artistid`) VALUES
-('AW12', 'Mona Lisa', '1503', 'Painting', '10,00,00,000', 'G123', 'NG123', 'AD11'),
-('AW34', 'Poppies', '1873', 'Painting', '1,50,00,000', 'H123', 'MM123', 'AD22'),
-('AW56', 'Guernica', '1937', 'Painting', '2,50,00,000', 'I123', 'TLM123', 'AD55'),
-('AW78', 'The Night Watch', '1642', 'Painting', '90,00,000', 'J123', 'BM123', 'AD88'),
-('AW90', 'Two Sisters', '2010', 'Sculpture', '2,00,000', 'K123', 'JG123', 'AD00'),
-('a111', 'ttt', '2018', 'tyse', '2000000000', 'E11', 'G11', 'ar1');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `contacts`
---
-
-DROP TABLE IF EXISTS `contacts`;
-CREATE TABLE IF NOT EXISTS `contacts` (
-  `CUSTID` varchar(20) DEFAULT NULL,
-  `PHONE` varchar(12) DEFAULT NULL,
-  KEY `CUSTID` (`CUSTID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `contacts`
---
-
-INSERT INTO `contacts` (`CUSTID`, `PHONE`) VALUES
+-- Insert dummy contacts
+INSERT INTO contacts (custid, phone) VALUES
 ('AT2000', '9456805776'),
 ('AR1998', '8073271337'),
 ('AD1998', '9980904736'),
@@ -130,105 +136,112 @@ INSERT INTO `contacts` (`CUSTID`, `PHONE`) VALUES
 ('AR2022', '800239170'),
 ('AR2025', '8002391707');
 
--- --------------------------------------------------------
+-- Table: preferences (Customer preferences about artists and galleries)
+CREATE TABLE preferences (
+  pref_id INT AUTO_INCREMENT PRIMARY KEY,
+  custid VARCHAR(20),
+  artistid VARCHAR(20),
+  gid VARCHAR(20),
+  FOREIGN KEY (custid) REFERENCES customer(custid),
+  FOREIGN KEY (artistid) REFERENCES artist(artistid),
+  FOREIGN KEY (gid) REFERENCES gallery(gid)
+);
 
---
--- Table structure for table `customer`
---
+-- Insert dummy preferences
+INSERT INTO preferences (custid, artistid, gid) VALUES
+('AT2000', 'ART1', 'MM123'),
+('AR1998', 'ART2', 'TLM123'),
+('AD1998', 'ART3', 'BM123'),
+('AM1994', 'ART4', 'JG123'),
+('PM1996', 'ART5', 'NG123');
 
-DROP TABLE IF EXISTS `customer`;
-CREATE TABLE IF NOT EXISTS `customer` (
-  `custid` varchar(20) NOT NULL,
-  `gid` varchar(20) DEFAULT NULL,
-  `artworkid` varchar(20) DEFAULT NULL,
-  `fname` char(25) DEFAULT NULL,
-  `lname` char(25) DEFAULT NULL,
-  `dob` date DEFAULT NULL,
-  `address` char(25) DEFAULT NULL,
-  PRIMARY KEY (`custid`),
-  KEY `gid` (`gid`),
-  KEY `artworkid` (`artworkid`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+-- Table: orders (Track customer orders and sales)
+CREATE TABLE orders (
+  order_id INT AUTO_INCREMENT PRIMARY KEY,
+  custid VARCHAR(20),
+  artid VARCHAR(20),
+  order_date DATE,
+  quantity INT DEFAULT 1,
+  price DECIMAL(15, 2),
+  gid VARCHAR(20),
+  FOREIGN KEY (custid) REFERENCES customer(custid),
+  FOREIGN KEY (artid) REFERENCES artwork(artid),
+  FOREIGN KEY (gid) REFERENCES gallery(gid)
+);
+INSERT INTO orders (custid, artid, order_date, quantity, price, gid)
+VALUES ('AR1998', 'AW34', '2025-05-24', 1, 150000000.00, 'MM123');
 
---
--- Dumping data for table `customer`
---
-
-INSERT INTO `customer` (`custid`, `gid`, `artworkid`, `fname`, `lname`, `dob`, `address`) VALUES
-('AT2000', 'MM123', 'AW12', 'Akshay', 'Thakur', '2000-04-16', 'New York'),
-('AR1998', 'TLM123', 'AW34', 'Ashutosh', 'Ranjan', '1998-02-04', 'Paris'),
-('AD1998', 'BM123', 'AW56', 'Ayush', 'Dhar', '1998-09-28', 'London'),
-('AM1994', 'JG123', 'AW78', 'Avanish', 'Mehta', '1994-10-05', 'Mumbai'),
-('PM1996', 'NG123', 'AW56', 'Prashant', 'Mehta', '1996-06-18', 'Washington'),
-('AR2022', 'MM126', 'AW56', 'Aashu', 'Demo', '2022-05-10', 'Delhi'),
-('AR2025', 'MM126', 'AW78', 'Aashut', 'Demo0', '2022-05-10', 'Delhi');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `exhibition`
---
-
-DROP TABLE IF EXISTS `exhibition`;
-CREATE TABLE IF NOT EXISTS `exhibition` (
-  `eid` varchar(20) NOT NULL,
-  `gid` varchar(20) DEFAULT NULL,
-  `startdate` date DEFAULT NULL,
-  `enddate` date DEFAULT NULL,
-  PRIMARY KEY (`eid`),
-  KEY `gid` (`gid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `exhibition`
---
-
-INSERT INTO `exhibition` (`eid`, `gid`, `startdate`, `enddate`) VALUES
-('H123', 'BM123', '2018-12-21', '2019-01-05'),
-('I123', 'MM123', '2019-01-25', '2019-02-05'),
-('G123', 'NG123', '2018-12-01', '2018-12-15'),
-('J123', 'TLM123', '2018-12-15', '2019-01-15'),
-('K123', 'JG123', '2019-03-09', '2019-03-27');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `gallery`
---
-
-DROP TABLE IF EXISTS `gallery`;
-CREATE TABLE IF NOT EXISTS `gallery` (
-  `gid` varchar(26) NOT NULL DEFAULT 'not null',
-  `gname` varchar(24) DEFAULT NULL,
-  `location` varchar(26) DEFAULT NULL,
-  PRIMARY KEY (`gid`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `gallery`
---
-
-INSERT INTO `gallery` (`gid`, `gname`, `location`) VALUES
-('MM126', 'MY GALLERY', 'Patna'),
-('s123', 'ASHUTOSH', 'patna'),
-('NG123', 'NATIONAL GALLERY', 'Washington'),
-('BM123', 'BRITISH MUSEUM', 'London'),
-('JG123', 'JAHANGIR GALLERY', 'Mumbai'),
-('TLM123', 'THE LOUVRE MUSEUM', 'Paris'),
-('MM123', 'METROPOLITAN MUSEUM', 'New York');
-
---
--- Triggers `gallery`
---
-DROP TRIGGER IF EXISTS `UPPERCASE`;
+-- Insert dummy orders
+INSERT INTO orders (custid, artid, order_date, quantity, price, gid) VALUES
+('AT2000', 'AW12', '2022-05-10', 1, 1000000000.00, 'NG123'),
+('AR1998', 'AW34', '2022-06-15', 1, 150000000.00, 'MM123'),
+('AD1998', 'AW56', '2022-07-20', 1, 250000000.00, 'TLM123'),
+('AM1994', 'AW78', '2022-08-05', 1, 90000000.00, 'BM123'),
+('PM1996', 'AW90', '2022-09-10', 1, 200000.00, 'JG123');
+CREATE TABLE artist_sales (
+  artistid VARCHAR(20),
+  month_year VARCHAR(7), -- Format: YYYY-MM
+  total_sales DECIMAL(15,2) DEFAULT 0,
+  PRIMARY KEY (artistid, month_year),
+  FOREIGN KEY (artistid) REFERENCES artist(artistid)
+);
+-- Stored procedure to display customer info with contacts
 DELIMITER $$
-CREATE TRIGGER `UPPERCASE` BEFORE INSERT ON `gallery` FOR EACH ROW BEGIN
-              SET NEW.gname=UPPER(NEW.gname);
-              END
-$$
+DROP PROCEDURE IF EXISTS display$$
+CREATE PROCEDURE display()
+BEGIN
+  SELECT c.custid, c.fname, c.lname, c.dob, c.address, ct.phone
+  FROM customer c
+  LEFT JOIN contacts ct ON c.custid = ct.custid;
+END$$
 DELIMITER ;
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Stored procedure to get age of customers
+DELIMITER $$
+DROP PROCEDURE IF EXISTS GetAge$$
+CREATE PROCEDURE GetAge()
+BEGIN
+  SELECT custid, fname, lname, dob, YEAR(CURDATE()) - YEAR(dob) AS age
+  FROM customer;
+END$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER update_artist_sales_monthly AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+  DECLARE art_artistid VARCHAR(20);
+  DECLARE order_month VARCHAR(7);
+
+  -- Get artistid for the sold artwork
+  SELECT artistid INTO art_artistid FROM artwork WHERE artid = NEW.artid;
+
+  -- Extract month and year in 'YYYY-MM' format from order_date
+  SET order_month = DATE_FORMAT(NEW.order_date, '%Y-%m');
+
+  -- If entry exists, update total_sales, else insert new record
+  IF EXISTS (
+    SELECT 1 FROM artist_sales WHERE artistid = art_artistid AND month_year = order_month
+  ) THEN
+    UPDATE artist_sales 
+    SET total_sales = total_sales + NEW.price * NEW.quantity
+    WHERE artistid = art_artistid AND month_year = order_month;
+  ELSE
+    INSERT INTO artist_sales (artistid, month_year, total_sales)
+    VALUES (art_artistid, order_month, NEW.price * NEW.quantity);
+  END IF;
+END$$
+DELIMITER ;
+
+-- View: Best Selling Artwork of the Month (based on total sales amount)
+CREATE OR REPLACE VIEW best_selling_artwork_month AS
+SELECT 
+  DATE_FORMAT(o.order_date, '%Y-%m') AS month_year,
+  a.artid,
+  a.title,
+  a.artistid,
+  SUM(o.price * o.quantity) AS total_sales
+FROM orders o
+JOIN artwork a ON o.artid = a.artid
+GROUP BY month_year, a.artid, a.title, a.artistid
+ORDER BY month_year DESC, total_sales DESC;
+COMMIT;

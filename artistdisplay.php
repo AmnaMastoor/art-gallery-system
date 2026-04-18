@@ -57,30 +57,46 @@
   <br><br>
  </tr>
   <?php
-$con = mysqli_connect("localhost", "root", "", "art_gallery");
 
-  if ($con->connect_error) {
-   die("Connection failed: " . $con->connect_error);
-  } 
+$con = mysqli_connect("localhost", "root", "amna12345", "art_gallery");
 
-  $sql = "SELECT artistid, g.gname, cu.fname, cu.lname, eid, fname1, lname1, birthplace, style from Artist ar join customer cu on ar.custid=cu.custid join gallery g on g.gid=ar.gid";
-  mysqli_query($con,$sql);
+if ($con->connect_error) {
+    die("Connection failed: " . $con->connect_error);
+}
 
-  if ($result = mysqli_query($con,$sql))
-   {
-   
-   while($row = $result->fetch_assoc())
-    {
-    echo "<tr><td>" . $row["artistid"]. "</td><td>" . $row["eid"]. "</td><td>" . $row["fname1"]. '&nbsp' . $row["lname1"]. "</td><td>" .$row["birthplace"]. "</td><td><br>" . $row["style"]. "<br></br></td><td>" . $row["gname"]. "</td><td>" . $row["fname"]. '&nbsp' . $row["lname"]. "</td></tr>";
+// Since artist has no custid or gid, we omit those joins
+$sql = "SELECT ar.artistid, ar.fname, ar.lname, ar.birthplace, ast.style_name
+        FROM artist ar
+        LEFT JOIN art_style ast ON ar.style_id = ast.style_id";
+
+if ($result = mysqli_query($con, $sql)) {
+    echo "<table>
+            <tr>
+              <th>Artist ID</th>
+              <th>Artist Name</th>
+              <th>BirthPlace</th>
+              <th>Style</th>
+            </tr>";
+
+    while ($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . htmlspecialchars($row["artistid"]) . "</td>
+                <td>" . htmlspecialchars($row["fname"]) . " " . htmlspecialchars($row["lname"]) . "</td>
+                <td>" . htmlspecialchars($row["birthplace"]) . "</td>
+                <td>" . htmlspecialchars($row["style_name"]) . "</td>
+              </tr>";
     }
     echo "</table>";
-    }
-else 
-  { 
-    echo "0 results"; 
-  }
+} else {
+    echo "0 results";
+}
+
 $con->close();
 ?>
+
+
+
+
 
 </table>
 </body>

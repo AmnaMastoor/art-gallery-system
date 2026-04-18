@@ -117,7 +117,7 @@ p{
 <?php
 $host="localhost";
 $user="root";
-$password="";
+$password="amna12345";
 $con= new mysqli($host,$user,$password,"art_gallery");
 if ($con->connect_error) {
             die("Connection failed: " . $con->connect_error);

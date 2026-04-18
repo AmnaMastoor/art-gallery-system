@@ -77,7 +77,7 @@ div{
  <?php
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "amna12345";
 $dbname = "art_gallery";
 
 

@@ -1,77 +1,165 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>
-		Artist
-	</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Artist</title>
+  <link href="https://fonts.googleapis.com/css?family=Candal|Carter+One|Jockey+One&display=swap" rel="stylesheet" />
+  <style>
+    /* Base */
+    body {
+      background: url("./Images/artist.jpg") no-repeat center center fixed;
+      background-size: cover;
+      font-family: Verdana, sans-serif;
+      color: #2c3e50; /* darker blue for readability */
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 40px;
+      background-blend-mode: multiply;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Title */
+    h1.title {
+      font-size: 3rem;
+      font-family: 'Carter One', cursive;
+      border: 6px solid floralwhite;
+      padding: 12px 30px;
+      color: #34495e; /* muted dark blue */
+      text-align: center;
+      margin-bottom: 40px;
+      text-decoration: underline;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      max-width: 90vw;
+    }
+
+    /* Instruction Text */
+    b.options-text {
+      font-family: 'Carter One', cursive;
+      font-size: 1.3rem;
+      color: #34495e;
+      margin: 0 0 20px 0;
+      text-align: center;
+      display: block;
+      max-width: 90vw;
+    }
+
+    /* List Styling */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 50px 0;
+      max-width: 420px;
+      width: 90vw;
+    }
+
+    ul li {
+      background-color: #5a6bc1;
+      opacity: 0.9;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(90, 107, 193, 0.4);
+    }
+
+    ul li a {
+      display: block;
+      padding: 22px 10px;
+      text-decoration: underline;
+      font-family: 'Jockey One', cursive;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: white;
+      text-align: center;
+      line-height: 1.2;
+      user-select: none;
+      border-radius: 12px;
+    }
+
+    ul li:hover {
+      background-color: #34495e;
+      transform: scale(1.05);
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(52, 73, 94, 0.6);
+    }
+
+    ul li:hover a {
+      color: #f1c40f; /* bright gold on hover */
+      text-decoration: none;
+    }
+
+    /* Back link */
+    p.back-link {
+      font-family: Arial, sans-serif;
+      margin: 0 0 40px 0;
+      width: 90vw;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    p.back-link a {
+      color: #f39c12;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      padding: 8px 16px;
+      border-radius: 10px;
+      background-color: #2c3e50;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: inline-block;
+      user-select: none;
+    }
+
+    p.back-link a:hover {
+      text-decoration: underline;
+      background-color: #f39c12;
+      color: #2c3e50;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      h1.title {
+        font-size: 2.2rem;
+        padding: 8px 15px;
+      }
+      b.options-text {
+        font-size: 1.1rem;
+      }
+      ul li a {
+        font-size: 1rem;
+        padding: 18px 8px;
+      }
+      ul {
+        max-width: 100%;
+      }
+      p.back-link {
+        max-width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-	<link href='https://fonts.googleapis.com/css?family=Candal' rel='stylesheet'>
-	<link href='https://fonts.googleapis.com/css?family=Carter One' rel='stylesheet'>
-	<link href='https://fonts.googleapis.com/css?family=Jockey One' rel='stylesheet'>
-	<h1>
-	<center>
-	<h1 style="font-size: 40" "font-family: Carter One"><font style="border: 14px groove floralwhite; padding-left: 25px; padding-right: 25px;" color=azure ><u>ARTIST</font></h1>
-		<br>
-	</center>
-       <style> body{ background: url("./Images/artist.jpg") no-repeat;
-		background-size:cover;
-		font-family:"Verdana";
-		color:cornflowerblue;
-		}
-		</style>
-		<b>
-			<font style="font-family: Carter One " font color="black" size="10">
-				SELECT FROM BELOW OPTION:</font>
-		</b>
-<style>
-		ul{
-	margin:3pc;
-	padding:0.1px;
-	list-style:none;
-	
-}
-ul li{
-	float:initial;
-	width:420px;
-	height:80px;
-	background-color:mediumslateblue;
-	opacity:.8;
-	line-height:40px;
-	text-align:center;
-	font-size:35px;
-	margin-bottom: 16px;
-}
-ul li a{
-	text-decoration:underline;
-	text-align: center;
-	font-family: Jockey One; 
-	font-weight: bold;
-	font-size: 6;
-	color:white;
-	display:block;
-}
-ul li a:hover{
-	 background-color: white;
-    color: black;
-	background-size: contain;
-}
-ul li ul li{
-	display:none;
-}
-ul li:hover ul li{
-	display:block;
-}
-</style><br>
-<ul>
-	<li><a href="artistinsert.html" >INSERT VALUES IN TO THE ARTIST</a></li>
-	<li><a href="artistsearch.php">SEARCH VALUES FROM THE
-				ARTIST</a></li>
-	<li><a href="artistdisplay.php">DISPLAY VALUES FROM THE
-				ARTIST TABLE</a></li>
-	<li><a href="artistdelete.php">DELETE VALUES FROM THE
-				ARTIST</a></li>
-</h1>
-<p style="font-family: arial"><a href="FrontEnd.html"><font style="color:gold">GO BACK</font></a></p>
+
+  <h1 class="title">ARTIST</h1>
+
+  <b class="options-text">SELECT FROM THE OPTIONS BELOW:</b>
+
+  <ul>
+    <li><a href="artistinsert.html" aria-label="Insert values into the artist">Insert Values Into the Artist</a></li>
+    <li><a href="artistsearch.php" aria-label="Search values from the artist">Search Values From the Artist</a></li>
+    <li><a href="artistdisplay.php" aria-label="Display values from the artist table">Display Values From the Artist Table</a></li>
+    <li><a href="artistdelete.php" aria-label="Delete values from the artist">Delete Values From the Artist</a></li>
+  </ul>
+
+  <p class="back-link"><a href="FrontEnd.html" aria-label="Go back to front end">Go Back</a></p>
+
 </body>
 </html>

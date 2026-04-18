@@ -4,7 +4,7 @@
     $gname = $_POST['GNAME'];
     $location = $_POST['LOCATION'];
 
-    $link = new mysqli('localhost','root','','art_gallery');
+    $link = new mysqli('localhost','root','amna12345','art_gallery');
 
     if($link->connect_error)
         die('connection error: '.$link->connect_error);

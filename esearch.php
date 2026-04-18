@@ -1,148 +1,206 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Search Exhibition</title>
-</head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Search Exhibition</title>
 <style>
-    table{
-             border-collapse: collapse;
-             width: 60%;
-             padding: 150px;
-             margin-left: 280px;
-     } 
-    th, td {
-             text-align: center;
-             padding: 8px;
-             border-radius: 12px;
-            }
-    tr:nth-child(even) 
-    {
-    	background-color: #f2f2f2;
-        font-family: "arial";
-        font-weight: bold;
-        
-    }
-    th {
-    background-color: mediumslateblue;
-    color: white;
-    font-family:  "verdana";
-    font-weight: bold;
-    
-}
-input[type=text] {
-    width: 110px;
+  /* Reset & Base */
+  * {
     box-sizing: border-box;
+  }
+  body {
+    background: #E6E6FA; /* lavender */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    color: #2c3e50;
+  }
+  
+  /* Header */
+  h1 {
+    margin: 50px 0 30px;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: #4B0082;
+    background: #fff;
+    padding: 15px 35px;
+    border-radius: 15px;
+    border: 3px solid #808080;
+    user-select: none;
+  }
+  
+  /* Form Container */
+  form {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #4B0082;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1.1rem;
     border: 2px solid #ccc;
-    border-radius: 9px;
-    font-size: 16px;
-    background-color: white;
-    background-position: 10px 10px; 
-    background-repeat: no-repeat;
-    padding: 25px 20px 22px 10px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-    font-weight: bold;
-    font-size: 30px;
-}
-input[type=text]:focus {
-    width: 60%;
-}
-div{
-	font-family: "verdana";
-	font-weight: bold;
-	font-size: 30px;
-	font-style: bold;
-	margin-left:25px;
-	margin-top: 35px;
-}
-.btn{
+    border-radius: 12px;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus {
+    border-color: mediumslateblue;
+    outline: none;
+  }
+
+  button.btn {
     background-color: forestgreen;
     color: white;
-    padding: 16px 10px;
-    margin: 8px 20px 20px 50px;
-    border-radius: 24px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 25px;
+    padding: 15px 0;
     cursor: pointer;
-    width: 10%;
-    opacity: 0.7;
-    align-content: center;
-    font-family: "verdana";
-    font-weight: bold;
-    -webkit-box-shadow: 0px 6px 0px green;
-    -moz-box-shadow: 0px 6px 0px green;
-    box-shadow: 0px 6px 0px green;
-    -webkit-transition: all .1s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
-    -webkit-transform: translate(0, 5px) rotateX(25deg);
-    -moz-transform: translate(0, 4px);
-    transform: translate(0, 4px)
+    box-shadow: 0 6px 0 green;
+    transition: opacity 0.3s ease;
+  }
+  button.btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Messages */
+  .message, .error {
+    max-width: 400px;
+    margin: 30px auto 50px;
+    padding: 18px 25px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-align: center;
+  }
+  .message {
+    background-color: #e0f7fa;
+    color: #00796b;
+    box-shadow: 0 5px 15px rgba(0,121,107,0.3);
+  }
+  .error {
+    background-color: #ffebee;
+    color: #c62828;
+    box-shadow: 0 5px 15px rgba(198,40,40,0.3);
+  }
+
+  /* Table */
+  table {
+    width: 90%;
+    max-width: 700px;
+    margin: 40px auto 80px;
+    border-collapse: collapse;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    background: white;
+  }
+  th, td {
+    text-align: center;
+    padding: 15px 20px;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+  }
+  th {
+    background-color: mediumslateblue;
+    color: white;
+    text-transform: uppercase;
+  }
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 2rem;
+      padding: 10px 25px;
     }
-.btn:hover 
-{
-    opacity: 1;
-    background-color:forestgreen;
-}
-b{
-	font-family: "verdana";
-	background-color: lightcyan;
-    color: black;
-    margin-left:80px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 30px;
-    width: 85%;
-    
-}
-span{
-    font-family: "verdana";
-    background-color: lightcyan;
-    color: black;
-    margin-top:4px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 30px;
-    margin-left:0px;
-    width: 35%;  
-    font-weight: bold;
-}
+    form {
+      padding: 25px 30px;
+      width: 90%;
+    }
+    button.btn {
+      font-size: 1rem;
+      padding: 12px 0;
+    }
+    table {
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  }
 </style>
-<body style="background-color: lavender">
-    <h1><center><font style="border:9px solid grey" face="arial">SEARCH FROM EXHIBITION TABLE </font></center></h1>
-	<form action="esearch.php" method="POST">
-		<div>Enter Exhibition ID:<input type="text" name="E_ID"><br></div>
-		<br><br>
-		<button type="submit" value ="Find" class="btn">SEARCH</button>
-	</form>
+</head>
+<body>
+
+<h1>Search Exhibition</h1>
+
+<form action="esearch.php" method="POST" autocomplete="off" novalidate>
+  <label for="E_ID">Enter Exhibition ID</label>
+  <input type="text" id="E_ID" name="E_ID" placeholder="E.g. EXH123" required />
+  <button type="submit" class="btn">Search</button>
+</form>
+
 <?php
-$host="localhost";
-$user="root";
-$password="";
-$con= new mysqli($host,$user,$password,"art_gallery");
+$host = "localhost";
+$user = "root";
+$password = "amna12345";
+$con = new mysqli($host, $user, $password, "art_gallery");
+
 if ($con->connect_error) {
-		    die("Connection failed: " . $con->connect_error);
-		}
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-	$n1=$_POST['E_ID'];
-	echo "<b><br>Entered Exhibition ID is $n1<br></b>";
-	
-	$sql="SELECT * from exhibition where eid='$n1'";
+    echo "<div class='error'>Connection failed: " . $con->connect_error . "</div>";
+} else if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $n1 = $con->real_escape_string(trim($_POST['E_ID']));
+    echo "<div class='message'>You searched for Exhibition ID: <strong>" . htmlspecialchars($n1) . "</strong></div>";
 
-				$result = $con->query($sql);
+    $sql = "SELECT * FROM exhibition WHERE eid='$n1'";
+    $result = $con->query($sql);
 
-			if ($result->num_rows > 0) {
-                echo "<b><br>Search Successful<br><br></b>";
-		    echo "<br><br><br><br><table><tr><th>E_ID</th><th>G_ID</th><th>Start Date</th><th><br>End Date<br></br></th></tr>";
-		   		    while($row = $result->fetch_assoc()) {
-		       echo "<tr><td>" . $row["eid"]. "</td><td>" . $row["gid"]. "</td><td>" .$row["startdate"]. "</td><td><br>"
-              . $row["enddate"]. "<br></br></td></tr>";
-		    }
-		    echo "</table>";
-		} else {
-		    echo "<span><br><br>OPPS!!! Search Unsuccessful!<br><br>There is no such Exhibition ID exists. Please Enter Correct Exhibition ID and Search again.</span>";
-		}
-		}
+    if ($result && $result->num_rows > 0) {
+        echo "<table>
+                <thead>
+                    <tr>
+                        <th>E_ID</th>
+                        <th>G_ID</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                </thead>
+                <tbody>";
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>" . htmlspecialchars($row['eid']) . "</td>
+                    <td>" . htmlspecialchars($row['gid']) . "</td>
+                    <td>" . htmlspecialchars($row['startdate']) . "</td>
+                    <td>" . htmlspecialchars($row['enddate']) . "</td>
+                  </tr>";
+        }
+        echo "</tbody></table>";
+    } else {
+        echo "<div class='error'>No exhibition found with ID <strong>" . htmlspecialchars($n1) . "</strong>. Please try again.</div>";
+    }
+}
 
-		$con->close();
+$con->close();
 ?>
 
 </body>

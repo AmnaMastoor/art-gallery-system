@@ -1,31 +1,30 @@
- <?php
-    if(isset($_POST['artistid']) && isset($_POST['G_ID']) && isset($_POST['custid']) && isset($_POST['fname1']) && isset($_POST['lname1']) && isset($_POST['E_ID']) && isset($_POST['birthplace']) && isset($_POST['style'])):
-
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $artistid = $_POST['artistid'];
-    $gid = $_POST['G_ID'];
-    $fname1 = $_POST['fname1'];
-    $lname1 = $_POST['lname1'];
-    $eid = $_POST['E_ID'];
+    $fname = $_POST['fname'];
+    $lname = $_POST['lname'];
     $birthplace = $_POST['birthplace'];
-    $style = $_POST['style'];
-    $custid = $_POST['custid'];
+    $style_id = $_POST['style_id'];
 
-    $link = new mysqli('localhost','root','','art_gallery');
+    // Connect to database
+    $conn = new mysqli("localhost", "root", "amna12345", "art_gallery");
 
-    if($link->connect_error)
-        die('connection error: '.$link->connect_error);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . htmlspecialchars($conn->connect_error));
+    }
 
-    $sql3 = "INSERT INTO ARTIST(artistid, gid, custid, eid, fname1, lname1, birthplace, style) VALUES('".$artistid."', '".$gid."', '".$custid."', '".$eid."', '".$fname1."', '".$lname1."', '".$birthplace."',  '".$style."')";
+    // Prepare statement to prevent SQL injection
+    $stmt = $conn->prepare("INSERT INTO artist (artistid, fname, lname, birthplace, style_id) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssi", $artistid, $fname, $lname, $birthplace, $style_id);
 
-    $result = $link->query($sql3); 
+    if ($stmt->execute()) {
+        echo "<script>alert('Artist successfully added.'); window.location.href='frontend.html';</script>";
+    } else {
+        echo "<script>alert('Error: " . addslashes($stmt->error) . "'); window.history.back();</script>";
+    }
 
-    if($result > 0):
-        echo 'Successfully posted.' ;
-    else:
-        echo 'Unable to post';
-    endif;
-
-    $link->close();
-    die();
-    endif; 
+    $stmt->close();
+    $conn->close();
+}
 ?>
